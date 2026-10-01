@@ -1,0 +1,20 @@
+# AI provider — OpenCode (BA / Developer / QA in MVP).
+# Executed via adapter (OpenCodeExecutor), never in ForgeFlow server.
+# Delegate via Docker / remote worker / K8s Job / OpenCode env.
+name: opencode
+kind: ai-provider
+version: 1
+transport: http
+metadata:
+  displayName: OpenCode
+  adapter: OpenCodeExecutor
+connection:
+  secretRef: vault://ai/opencode
+actions:
+  - run_agent
+  - resume_agent
+  - cancel_agent
+agents: [ba, developer, qa]
+permissions:
+  leastPrivilege: true
+  note: AI steps get minimum tools only

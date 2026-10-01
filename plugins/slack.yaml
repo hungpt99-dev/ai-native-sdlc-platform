@@ -1,0 +1,17 @@
+# Plugin manifest — Slack (notifications; GitHub/Jira/Factory/Claude/Codex arrive in P2).
+name: slack
+version: 1
+transport: http
+metadata:
+  displayName: Slack
+  description: Approval + run notifications
+connection:
+  type: slack
+  secretRef: vault://slack/prod
+triggers: []
+actions:
+  - notify
+  - approval_notify
+permissions:
+  scopes: [chat:write]
+  leastPrivilege: true

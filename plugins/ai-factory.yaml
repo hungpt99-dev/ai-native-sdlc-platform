@@ -1,0 +1,18 @@
+# AI provider — Factory (Architect in MVP).
+name: factory
+kind: ai-provider
+version: 1
+transport: http
+metadata:
+  displayName: Factory
+  adapter: FactoryExecutor
+connection:
+  secretRef: vault://ai/factory
+actions:
+  - run_agent
+  - resume_agent
+  - cancel_agent
+agents: [architect]
+permissions:
+  leastPrivilege: true
+  note: AI steps get minimum tools only

@@ -1,0 +1,26 @@
+# Plugin manifest — Redmine (issue tracking, reused, never rebuilt).
+# Shape: Plugin { Metadata, Connection, Triggers, Actions, Permissions }
+name: redmine
+version: 1
+transport: http   # n8n | mcp | http/rest only
+metadata:
+  displayName: Redmine
+  description: Issue source/trigger for MVP chain
+connection:
+  type: redmine
+  secretRef: vault://redmine/prod   # secrets as refs only, never inline
+triggers:
+  - issue.created
+  - issue.updated
+  - issue.status_changed
+  - issue.assigned
+  - issue.closed
+actions:
+  - issue.create
+  - issue.update
+  - issue.comment
+  - issue.change_status
+  - issue.assign
+permissions:
+  scopes: [issue:read, issue:write]
+  leastPrivilege: true

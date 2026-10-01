@@ -1,0 +1,12 @@
+{
+  "eventId": "evt-456",
+  "source": "redmine",
+  "type": "issue.status_changed",
+  "timestamp": "2026-10-01T10:00:00Z",
+  "projectId": "payment",
+  "idempotencyKey": "evt-456",
+  "data": {
+    "issueId": "PAY-123",
+    "status": "ready_for_development"
+  }
+}

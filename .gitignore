@@ -1,0 +1,38 @@
+# Binaries / build outputs
+node_modules/
+dist/
+build/
+target/
+out/
+.next/
+*.log
+
+# Java / Spring Boot
+*.class
+*.jar
+*.war
+.gradle/
+.idea/
+*.iml
+
+# Python (workers / scripts)
+__pycache__/
+.venv/
+venv/
+
+# Env / secrets — never commit real credentials, only vault:// refs
+.env
+.env.*
+*.pem
+*.key
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local runtime
+data/
+*.db
+*.sqlite

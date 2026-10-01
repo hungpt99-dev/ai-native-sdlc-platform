@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ForgeFlow normalized event",
+  "description": "Receive -> Validate -> Normalize -> Match -> Start (idempotent on eventId). Duplicate Event #456 must not start a 2nd run.",
+  "type": "object",
+  "required": ["eventId", "source", "type", "timestamp", "projectId", "data"],
+  "properties": {
+    "eventId": { "type": "string", "example": "evt-456" },
+    "source": { "type": "string", "example": "redmine" },
+    "type": { "type": "string", "example": "issue.status_changed" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "projectId": { "type": "string", "example": "payment" },
+    "idempotencyKey": { "type": "string", "example": "evt-456" },
+    "data": {
+      "type": "object",
+      "required": ["issueId", "status"],
+      "properties": {
+        "issueId": { "type": "string", "example": "PAY-123" },
+        "status": { "type": "string", "example": "ready_for_development" }
+      }
+    }
+  }
+}

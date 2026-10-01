@@ -1,0 +1,76 @@
+# ForgeFlow MVP workflow — feature development chain.
+# Workflow is configuration (YAML), not code.
+# Runs pin this version: a run started on v2 stays on v2 after v3 exists.
+name: feature-development
+version: 1
+description: "MVP chain only: Redmine -> BA -> approval -> Architect -> approval -> Developer -> QA -> approval -> GitLab MR"
+
+trigger:
+  type: event
+  source: redmine
+  event: issue.status_changed
+  condition:
+    status: ready_for_development
+  idempotencyKeyFrom: eventId  # duplicate Event #456 must not start a 2nd run
+
+steps:
+  - id: ba
+    type: agent
+    provider: opencode
+    agent: ba
+    input:
+      issue: redmine://issue/${event.issueId}
+
+  - id: ba-approval
+    type: approval
+    role: product_owner
+    approvers: [product_owner]
+    timeout: 48h
+    on_reject:
+      goto: ba   # rework loop; CHANGES_REQUESTED returns here
+
+  - id: architect
+    type: agent
+    provider: factory
+    agent: architect
+    input:
+      requirement: artifact://ba/requirement.md
+
+  - id: architecture-approval
+    type: approval
+    role: tech_lead
+    approvers: [tech_lead]
+    timeout: 48h
+    on_reject:
+      goto: architect
+
+  - id: developer
+    type: agent
+    provider: opencode
+    agent: developer
+    input:
+      architecture: artifact://architect/architecture.md
+
+  - id: qa
+    type: agent
+    provider: opencode
+    agent: qa
+    input:
+      code: artifact://developer/code
+
+  - id: qa-approval
+    type: approval
+    role: qa_lead
+    approvers: [qa_lead]
+    timeout: 48h
+    on_reject:
+      goto: developer
+
+  - id: create-mr
+    type: action
+    plugin: gitlab
+    action: create_merge_request
+    input:
+      repository: ${project.repository}
+      sourceBranch: ${run.branch}
+      targetBranch: main

@@ -1,0 +1,25 @@
+# Plugin manifest — GitLab (git hosting + MR, reused).
+name: gitlab
+version: 1
+transport: http
+metadata:
+  displayName: GitLab
+  description: Git host + merge request target for MVP chain
+connection:
+  type: gitlab
+  secretRef: vault://gitlab/prod
+triggers:
+  - mr.created
+  - mr.updated
+  - pipeline.failed
+  - pipeline.succeeded
+  - push
+actions:
+  - create_branch
+  - create_merge_request
+  - comment
+  - run_pipeline
+  - merge
+permissions:
+  scopes: [repo:read, mr:write, pipeline:read]
+  leastPrivilege: true

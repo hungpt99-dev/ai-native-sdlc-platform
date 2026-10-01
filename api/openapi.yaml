@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: ForgeFlow API
+  version: 0.1.0
+  description: >
+    Control-plane contract (init stub). Prefix is always /api/.
+    No auth/pagination schema decided — check TDDs before adding.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/projects:
+    post:
+      summary: Create project
+      responses: { '201': { description: Created } }
+    get:
+      summary: List projects
+      responses: { '200': { description: OK } }
+  /api/workflows:
+    post:
+      summary: Create workflow
+      responses: { '201': { description: Created } }
+    get:
+      summary: List workflows
+      responses: { '200': { description: OK } }
+  /api/workflows/{id}:
+    get:
+      summary: Get workflow (includes versions; runs pin version)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '200': { description: OK } }
+  /api/workflows/{id}/runs:
+    post:
+      summary: Start run (idempotent on eventId/idempotencyKey)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '202': { description: Accepted } }
+  /api/runs/{id}:
+    get:
+      summary: Get run + step projection
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '200': { description: OK } }
+  /api/runs/{id}/cancel:
+    post:
+      summary: Cancel run
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '202': { description: Accepted } }
+  /api/approvals:
+    get:
+      summary: List approvals (PENDING, APPROVED, REJECTED, CHANGES_REQUESTED, EXPIRED)
+      responses: { '200': { description: OK } }
+  /api/approvals/{id}/approve:
+    post:
+      summary: Approve
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '200': { description: OK } }
+  /api/approvals/{id}/reject:
+    post:
+      summary: Reject
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '200': { description: OK } }
+  /api/artifacts/{id}:
+    get:
+      summary: Get artifact reference (never a blob; location points to Git/S3/MinIO)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '200': { description: OK } }
+  /api/plugins:
+    get:
+      summary: List plugins
+      responses: { '200': { description: OK } }
+  /api/plugins/{id}/connect:
+    post:
+      summary: Connect plugin (stores vault:// ref, not secret)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses: { '200': { description: OK } }
+  /api/events:
+    post:
+      summary: Ingest normalized event (Receive -> Validate -> Normalize -> Match -> Start idempotently)
+      responses: { '202': { description: Accepted } }
+  /api/webhooks/{webhookId}:
+    post:
+      summary: Plugin webhook entry (e.g. Redmine status change)
+      parameters:
+        - { name: webhookId, in: path, required: true, schema: { type: string } }
+      responses: { '202': { description: Accepted } }
